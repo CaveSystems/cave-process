@@ -10,7 +10,7 @@
     <PackageLicenseUrl>https://www.gnu.org/licenses/lgpl-3.0.en.html</PackageLicenseUrl>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Cave.Process.snk</AssemblyOriginatorKeyFile>
-    <Version>1.0.0-alpha-$(Configuration.ToLower())-1</Version>
+    <Version>1.0.1</Version>
     <PackageIconUrl>https://www.cavesystems.de/favicon.ico</PackageIconUrl>
     <PackageTags>CaveSystems Process</PackageTags>
     <PackageProjectUrl>https://github.com/Dingsd4/cave-Process</PackageProjectUrl>
@@ -20,8 +20,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>1.0.0.1</AssemblyVersion>
-    <FileVersion>2018.1202.1356.1564</FileVersion>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <FileVersion>2019.108.1902.225</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>pdbonly</DebugType>
@@ -58,16 +58,16 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net20' OR '$(TargetFramework)'=='netstandard1.3'">
-    <PackageReference Include="Cave.Backports" Version="1.0.0-alpha-release-2" />
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net20' OR '$(TargetFramework)'=='netstandard1.3'">
+    <PackageReference Include="Cave.Backports" Version="1.0.1" />
+  </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Cave.Collections" Version="1.0.0-alpha-release-1" />
-    <PackageReference Include="Cave.Extensions" Version="1.0.0-alpha-release-5" />
-    <PackageReference Include="Cave.IO" Version="1.0.0-beta-release-1" />
-    <PackageReference Include="Cave.Platform" Version="1.0.0-alpha-release-2" />
+    <PackageReference Include="Cave.Collections" Version="1.0.1" />
+    <PackageReference Include="Cave.Extensions" Version="1.0.1" />
+    <PackageReference Include="Cave.IO" Version="1.0.1" />
+    <PackageReference Include="Cave.Platform" Version="1.0.0" />
   </ItemGroup>
 </Project>
