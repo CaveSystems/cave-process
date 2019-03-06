@@ -36,14 +36,12 @@
  */
 #endregion Authors & Contributors
 
-using Cave.Collections;
-using Cave.IO;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Cave.Collections;
 
 namespace Cave
 {
@@ -56,13 +54,17 @@ namespace Cave
         /// <param name="command">The command.</param>
         /// <param name="arguments">The arguments.</param>
         /// <param name="timeoutMilliSeconds">The timeout milli seconds.</param>
-        /// <returns></returns>
+        /// <returns>process result.</returns>
         public static ProcessResult Run(string command, string arguments, int timeoutMilliSeconds = 0)
         {
             try
             {
                 ProcessRunner runner = new ProcessRunner(command, arguments);
-                if (!runner.WaitForExit(timeoutMilliSeconds)) runner.Kill();
+                if (!runner.WaitForExit(timeoutMilliSeconds))
+                {
+                    runner.Kill();
+                }
+
                 return new ProcessResult(runner.Combined, runner.StdOut, runner.StdErr, runner.ExitCode);
             }
             catch (Exception ex)
@@ -75,7 +77,7 @@ namespace Cave
         /// <param name="command">The command.</param>
         /// <param name="arguments">The arguments.</param>
         /// <param name="environmentVariables">The environment variables.</param>
-        /// <returns></returns>
+        /// <returns>process result.</returns>
         public static ProcessResult Run(string command, string arguments, params Option[] environmentVariables)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo(command, arguments);
@@ -89,13 +91,17 @@ namespace Cave
         /// <summary>Runs the specified start information.</summary>
         /// <param name="startInfo">The start information.</param>
         /// <param name="timeoutMilliSeconds">The timeout milli seconds.</param>
-        /// <returns></returns>
+        /// <returns>process result.</returns>
         public static ProcessResult Run(ProcessStartInfo startInfo, int timeoutMilliSeconds = 0)
         {
             try
             {
                 ProcessRunner runner = new ProcessRunner(startInfo);
-                if (!runner.WaitForExit(timeoutMilliSeconds)) runner.Kill();
+                if (!runner.WaitForExit(timeoutMilliSeconds))
+                {
+                    runner.Kill();
+                }
+
                 return new ProcessResult(runner.Combined, runner.StdOut, runner.StdErr, runner.ExitCode);
             }
             catch (Exception ex)
@@ -104,7 +110,7 @@ namespace Cave
             }
         }
 
-        string FileName;
+        string fileName;
         StringBuilder stdout = new StringBuilder();
         StringBuilder stderr = new StringBuilder();
         StringBuilder combined = new StringBuilder();
@@ -115,7 +121,10 @@ namespace Cave
         /// <summary>Initializes a new instance of the <see cref="ProcessRunner"/> class by starting the specified command.</summary>
         /// <param name="cmd">The command.</param>
         /// <param name="parameter">The parameter.</param>
-        public ProcessRunner(string cmd, string parameter) : this(new ProcessStartInfo(cmd, parameter)) { }
+        public ProcessRunner(string cmd, string parameter)
+            : this(new ProcessStartInfo(cmd, parameter))
+        {
+        }
 
         /// <summary>Initializes a new instance of the <see cref="ProcessRunner"/> class by executing a new process with the specified start info.</summary>
         /// <param name="processStartInfo">The process start information.</param>
@@ -125,7 +134,7 @@ namespace Cave
             processStartInfo.RedirectStandardError = true;
             processStartInfo.RedirectStandardOutput = true;
             processStartInfo.UseShellExecute = false;
-            FileName = processStartInfo.FileName;
+            fileName = processStartInfo.FileName;
             process = new Process()
             {
                 EnableRaisingEvents = true,
@@ -143,16 +152,28 @@ namespace Cave
                 while (true)
                 {
                     string s = process.StandardError.ReadLine();
-                    if (s == null) break;
+                    if (s == null)
+                    {
+                        break;
+                    }
+
                     lock (combined)
                     {
                         combined.AppendLine(s);
-                        lock (stderr) stderr.AppendLine(s);
+                        lock (stderr)
+                        {
+                            stderr.AppendLine(s);
+                        }
                     }
                 }
             }
-            catch { }
-            finally { completedStdErr = true; }
+            catch
+            {
+            }
+            finally
+            {
+                completedStdErr = true;
+            }
         }
 
         private void ReadStandardOutput()
@@ -162,21 +183,33 @@ namespace Cave
                 while (true)
                 {
                     string s = process.StandardOutput.ReadLine();
-                    if (s == null) break;
+                    if (s == null)
+                    {
+                        break;
+                    }
+
                     lock (combined)
                     {
                         combined.AppendLine(s);
-                        lock (stdout) stdout.AppendLine(s);
+                        lock (stdout)
+                        {
+                            stdout.AppendLine(s);
+                        }
                     }
                 }
             }
-            catch { }
-            finally { completedStdOut = true; }
+            catch
+            {
+            }
+            finally
+            {
+                completedStdOut = true;
+            }
         }
 
         /// <summary>Waits for exit.</summary>
         /// <param name="timeSpan">The time span.</param>
-        /// <returns></returns>
+        /// <returns>true if process completed execution within the allotted time; otherwise, false.</returns>
         public bool WaitForExit(TimeSpan timeSpan)
         {
             return WaitForExit((int)(timeSpan.Ticks / TimeSpan.TicksPerMillisecond));
@@ -184,15 +217,22 @@ namespace Cave
 
         /// <summary>Waits for exit.</summary>
         /// <param name="milliSeconds">The milli seconds.</param>
-        /// <returns></returns>
+        /// <returns>true if process completed execution within the allotted time; otherwise, false.</returns>
         public bool WaitForExit(int milliSeconds = 0)
         {
             if (milliSeconds > 0)
             {
-                if (!process.WaitForExit(milliSeconds)) return false;
+                if (!process.WaitForExit(milliSeconds))
+                {
+                    return false;
+                }
             }
             process.WaitForExit();
-            while (!completedStdErr || !completedStdOut) Thread.Sleep(1);
+            while (!completedStdErr || !completedStdOut)
+            {
+                Thread.Sleep(1);
+            }
+
             return true;
         }
 
@@ -209,24 +249,57 @@ namespace Cave
 
         /// <summary>Gets the standard output.</summary>
         /// <value>The output.</value>
-        public string StdOut { get { lock (stdout) return stdout.ToString(); } }
+        public string StdOut
+        {
+            get
+            {
+                lock (stdout)
+                {
+                    return stdout.ToString();
+                }
+            }
+        }
 
         /// <summary>Gets the error output.</summary>
         /// <value>The error.</value>
-        public string StdErr { get { lock (stderr) return stderr.ToString(); } }
+        public string StdErr
+        {
+            get
+            {
+                lock (stderr)
+                {
+                    return stderr.ToString();
+                }
+            }
+        }
 
         /// <summary>Gets the combined output.</summary>
         /// <value>The combined.</value>
-        public string Combined { get { lock (combined) return combined.ToString(); } }
+        public string Combined
+        {
+            get
+            {
+                lock (combined)
+                {
+                    return combined.ToString();
+                }
+            }
+        }
 
         /// <summary>Gets a value indicating whether this instance has exited.</summary>
         /// <value>
         /// <c>true</c> if this instance has exited; otherwise, <c>false</c>.
         /// </value>
-        public bool HasExited { get { return process.HasExited; } }
+        public bool HasExited
+        {
+            get { return process.HasExited; }
+        }
 
         /// <summary>Gets the exit code.</summary>
         /// <value>The exit code.</value>
-        public int ExitCode { get { return process.ExitCode; } }
+        public int ExitCode
+        {
+            get { return process.ExitCode; }
+        }
     }
 }

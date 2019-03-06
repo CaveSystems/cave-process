@@ -49,17 +49,20 @@ using System;
 namespace Cave
 {
     /// <summary>
-    /// string line event arguments
+    /// string line event arguments.
     /// </summary>
     public sealed class LineEventArgs : EventArgs
     {
         /// <summary>
-        /// provides access to the line written
+        /// Gets access to the line written.
         /// </summary>
         public string Line { get; private set; }
 
         /// <summary>Initializes a new instance of the <see cref="LineEventArgs"/> class.</summary>
         /// <param name="line">The line.</param>
-        public LineEventArgs(string line) { Line = line; }
+        public LineEventArgs(string line)
+        {
+            Line = line;
+        }
     }
 }

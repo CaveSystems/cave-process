@@ -49,17 +49,20 @@ using System;
 namespace Cave
 {
     /// <summary>
-    /// Exit code event arguments
+    /// Exit code event arguments.
     /// </summary>
     public sealed class ExitEventArgs : EventArgs
     {
         /// <summary>
-        /// provides the exit code
+        /// Gets the exit code.
         /// </summary>
         public int ExitCode { get; private set; }
 
         /// <summary>Initializes a new instance of the <see cref="ExitEventArgs"/> class.</summary>
         /// <param name="exitCode">The exit code.</param>
-        public ExitEventArgs(int exitCode) { ExitCode = exitCode; }
+        public ExitEventArgs(int exitCode)
+        {
+            ExitCode = exitCode;
+        }
     }
 }
