@@ -41,7 +41,7 @@ using System;
 namespace Cave
 {
     /// <summary>
-    /// Provides the result of a process execution
+    /// Provides the result of a process execution.
     /// </summary>
     public class ProcessResult
     {

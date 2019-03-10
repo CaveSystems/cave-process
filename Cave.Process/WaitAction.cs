@@ -47,8 +47,8 @@
 namespace Cave
 {
     /// <summary>
-    /// Callback while waiting for process exit (should not use up more then 1000ms)
+    /// Callback while waiting for process exit (should not use up more then 1000ms).
     /// </summary>
-    /// <param name="exit">Break the current action</param>
+    /// <param name="exit">Break the current action.</param>
     public delegate void WaitAction(out bool exit);
 }
